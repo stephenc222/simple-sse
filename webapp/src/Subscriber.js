@@ -1,19 +1,21 @@
 // call this in some root-level "mount"
-export const initSubscriber = (endpoint, onUpdate, onError) => {
-  const evtSource = new EventSource(endpoint, { withCredentials: true });
-  evtSource.onerror = function (err) {
-    console.error("EventSource failed:", err);
-    onError(`${err}`)
+const DEFAULT_SSE_ENDPOINT = 'http://localhost:4000/streaming'
+export const initSubscriber = (
+  onUpdate,
+  onError,
+  endpoint = DEFAULT_SSE_ENDPOINT,
+  onOpen = () => { },
+) => {
+  const evtSource = new EventSource(endpoint, { withCredentials: true })
+  evtSource.onerror = function (errEvent) {
+    onError(errEvent)
   };
-  evtSource.addEventListener("ping", function (event) {
-    console.log('ping', event.data)
-  });
   evtSource.onmessage = function (event) {
-    console.log('MESSAGE:', event.data)
-    onUpdate(event.data)
+    onUpdate(event)
   }
   evtSource.onopen = function (event) {
-    console.log('ON OPEN')
+    onOpen(event)
   }
+  // adds api for consumer to determine when to close the connection
   return { close: () => evtSource.close() }
 }

@@ -9,7 +9,7 @@ app.get('/streaming', (req, res) => {
 
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Content-Type', 'text/event-stream');
-res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
     res.setHeader("Access-Control-Expose-Headers", "*");
     res.setHeader("Access-Control-Allow-Credentials", true);
     res.flushHeaders(); // flush the headers to establish SSE with client
@@ -22,7 +22,7 @@ res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
             res.end(); // terminates SSE session
             return;
         }
-        res.write(`data: ${JSON.stringify({num: counter})}\n\n`); // res.write() instead of res.send()
+        res.write(`data: ${JSON.stringify({ num: counter })}\n\n`); // res.write() instead of res.send()
     }, 1000);
 
     // If client closes connection, stop sending events
