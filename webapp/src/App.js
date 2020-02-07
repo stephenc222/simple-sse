@@ -6,7 +6,10 @@ function App() {
   const [value, onUpdate] = useState(0)
   const [err, onError] = useState('')
   useEffect(() => {
-    initSubscriber('http://localhost:4000/streaming', onUpdate, onError)
+    const sse = initSubscriber('http://localhost:4000/streaming', onUpdate, onError)
+    return () => {
+      sse.close()
+    }
   }, [])
   if (err) {
     return err

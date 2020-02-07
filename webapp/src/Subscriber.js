@@ -15,4 +15,5 @@ export const initSubscriber = (endpoint, onUpdate, onError) => {
   evtSource.onopen = function (event) {
     console.log('ON OPEN')
   }
+  return { close: () => evtSource.close() }
 }
