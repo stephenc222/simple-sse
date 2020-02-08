@@ -1,3 +1,3 @@
 #!/bin/bash
 
-command node ./server/server
+command cd server &&  nodemon ./server

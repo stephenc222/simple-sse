@@ -4,6 +4,7 @@ export const initSubscriber = (
   onUpdate,
   onError,
   endpoint = DEFAULT_SSE_ENDPOINT,
+  customSSEListeners = [{ type: '', func: () => { } }],
   onOpen = () => { },
 ) => {
   const evtSource = new EventSource(endpoint, { withCredentials: true })
@@ -15,6 +16,12 @@ export const initSubscriber = (
   }
   evtSource.onopen = function (event) {
     onOpen(event)
+  }
+  // means, set by consumer
+  if (customSSEListeners.length && customSSEListeners[0].type) {
+    customSSEListeners.forEach(({ type, func }) => {
+      evtSource.addEventListener(type, func)
+    })
   }
   // adds api for consumer to determine when to close the connection
   return { close: () => evtSource.close() }

@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { initSubscriber } from './Subscriber'
 import './App.css';
 
+const CUSTOM_LISTENERS = [{
+  type: 'custom',
+  func: (event) => console.log('custom event handled', event)
+}]
+
 function App() {
   const [value, onValueChange] = useState(0)
   const [err, onErrorChange] = useState('')
@@ -21,8 +26,10 @@ function App() {
 
   useEffect(() => {
     const sse = initSubscriber(onUpdate, onError)
+    const sse1 = initSubscriber(onUpdate, onError, 'http://localhost:4000/custom-streaming', CUSTOM_LISTENERS)
     return () => {
       sse.close()
+      sse1.close()
     }
   }, [])
   if (err) {
